@@ -5,24 +5,14 @@ import Person from './Person/Person';
 const App = props => {
   const [personsState, setPersonsState] = useState({
     persons: [
-      { name: 'Max', age: 28 },
-      { name: 'Manu', age: 29 },
-      { name: 'Michael', age: 27 }
+      { id: 0, name: 'Max', age: 28 },
+      { id: 1, name: 'Manu', age: 29 },
+      { id: 2, name: 'Michael', age: 27 }
     ]
   });
 
   const [otherState, setOtherState] = useState('some other value');
   const [showPersonsState, setShowPersonsState] = useState(false);
-
-  const switchNameHandler = (newName) => {
-    setPersonsState({
-      persons: [
-        { name: newName, age: 28 },
-        { name: 'Manu', age: 29 },
-        { name: 'Michael', age: 30 }
-      ]
-    });
-  };
 
   const nameChangedHandler = (event) => {
     setPersonsState({
@@ -32,6 +22,12 @@ const App = props => {
         { name: 'Michael', age: 27 }
       ]
     });
+  };
+
+  const deletePersonHandler = (personIndex) => {
+    const persons = [...personsState.persons];
+    persons.splice(personIndex, 1);
+    setPersonsState({persons});
   };
 
   const togglePersonsHandler = () => {
@@ -52,14 +48,13 @@ const App = props => {
   if (showPersonsState) {
     persons = (
       <div>
-        <Person name={personsState.persons[0].name}
-                age={personsState.persons[0].age} />
-        <Person name={personsState.persons[1].name} 
-                age={personsState.persons[1].age}
-                click={togglePersonsHandler.bind(this, 'Delf')}
-                changed={nameChangedHandler}>My hobbies: Racing</Person>
-        <Person name={personsState.persons[2].name} 
-                age={personsState.persons[2].age} />
+        {personsState.persons.map((person, index) => {
+          return <Person 
+                  click={deletePersonHandler.bind(this, index)}
+                  name={person.name}
+                  age={person.age}
+                  key={person.id} />
+        })}
       </div>
     );
   }
