@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import './App.css';
+import classes from './App.css';
 import Person from './Person/Person';
 
 const App = props => {
@@ -11,7 +11,6 @@ const App = props => {
     ]
   });
 
-  const [otherState, setOtherState] = useState('some other value');
   const [showPersonsState, setShowPersonsState] = useState(false);
 
   const nameChangedHandler = (event, id) => {
@@ -45,6 +44,7 @@ const App = props => {
   };
 
   let persons = null;
+  let btnClass = '';
 
   if (showPersonsState) {
     persons = (
@@ -59,21 +59,23 @@ const App = props => {
         })}
       </div>
     );
+
+    btnClass = classes.Red;
   }
 
-  const classes = [];
+  const assignedClasses = [];
   if (personsState.persons.length < 3) {
-    classes.push('red');
+    assignedClasses.push(classes.red);
   }
   if (personsState.persons.length < 2) {
-    classes.push('bold');
+    assignedClasses.push(classes.bold);
   }
 
   return (
-    <div className="App">
+    <div className={classes.App}>
       <h1>Hi, I'm a React App</h1>
-      <p className={classes.join(' ')}>This is really working!</p>
-      <button className="button" onClick={togglePersonsHandler}>
+      <p className={assignedClasses.join(' ')}>This is really working!</p>
+      <button className={btnClass} onClick={togglePersonsHandler}>
         Toggle Persons
       </button>
       {persons}
