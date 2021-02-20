@@ -44,19 +44,6 @@ const App = props => {
     setShowPersonsState(!doesShow);
   };
 
-  const style = {
-    backgroundColor: 'green',
-    color: 'white',
-    font: 'inherit',
-    border: '1px solid blue',
-    padding: '8px',
-    cursor: 'pointer',
-    ':hover': {
-      backgroundColor: 'lightgreen',
-      color: 'black'
-    }
-  };
-
   let persons = null;
 
   if (showPersonsState) {
@@ -72,12 +59,6 @@ const App = props => {
         })}
       </div>
     );
-
-    style.backgroundColor = 'red';
-    style[':hover'] = {
-      backgroundColor: 'salmon',
-      color: 'black'
-    };
   }
 
   const classes = [];
@@ -92,9 +73,9 @@ const App = props => {
     <div className="App">
       <h1>Hi, I'm a React App</h1>
       <p className={classes.join(' ')}>This is really working!</p>
-      <button 
-        style={style}
-        onClick={togglePersonsHandler.bind(this, 'Maximilian')}>Toggle Persons</button>
+      <button className="button" onClick={togglePersonsHandler}>
+        Toggle Persons
+      </button>
       {persons}
     </div>
   );
