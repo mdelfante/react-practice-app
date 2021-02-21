@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import classes from './App.css';
 import Persons from '../components/Persons/Persons';
 import Cockpit from '../components/Cockpit/Cockpit';
+import withClass from '../hoc/withClass';
+import AuthContext from '../context/auth-context';
 
 const App = props => {
   const [personsState, setPersonsState] = useState({
@@ -11,8 +13,8 @@ const App = props => {
       { id: 2, name: 'Michael', age: 27 }
     ]
   });
-
   const [showPersonsState, setShowPersonsState] = useState(false);
+  const [authenticatedState, setAuthenticatedState] = useState(false);
 
   const nameChangedHandler = (event, id) => {
     const personIndex = personsState.persons.findIndex(p => {
@@ -44,24 +46,34 @@ const App = props => {
     setShowPersonsState(!doesShow);
   };
 
+  const loginHandler = () => {
+    setAuthenticatedState(true);
+  };
+
   let persons = null;
 
   if (showPersonsState) {
     persons = <Persons 
         persons={personsState.persons}
         clicked={deletePersonHandler}
-        changed={nameChangedHandler} />;
+        changed={nameChangedHandler}
+        isAuthenticated={authenticatedState} />;
   }
 
   return (
-    <div className={classes.App}>
-      <Cockpit 
-        showPersons={showPersonsState}
-        persons={personsState.persons}
-        togglePersonsHandler={togglePersonsHandler} />
-      {persons}
-    </div>
+    <React.Fragment>
+      <AuthContext.Provider value={{
+        authenticated: authenticatedState,
+        login: loginHandler
+      }}>
+        <Cockpit 
+          showPersons={showPersonsState}
+          persons={personsState.persons}
+          togglePersonsHandler={togglePersonsHandler} />
+        {persons}
+      </AuthContext.Provider>
+    </React.Fragment>
   );
 };
 
-export default App;
+export default withClass(App, classes.App);

@@ -1,30 +1,41 @@
-import React from 'react';
+import React, { useEffect, useRef, useContext } from 'react';
 import classes from './Cockpit.css';
+import AuthContext from '../../context/auth-context';
 
 const Cockpit = props => {
-    const assignedClasses = [];
-    let btnClass = '';
+  const toggleBtnRef = useRef(null);
+  const authContext = useContext(AuthContext);
 
-    if (props.showPersons) {
-        btnClass = classes.Red;
-    }
+  console.log(authContext.login);
 
-    if (props.persons.length < 3) {
-      assignedClasses.push(classes.red);
-    }
-    if (props.persons.length < 2) {
-      assignedClasses.push(classes.bold);
-    }
+  useEffect(() => {
+    toggleBtnRef.current.click();
+  }, []);
 
-    return(
-        <div className={classes.Cockpit}>
-            <h1>Hi, I'm a React App</h1>
-            <p className={assignedClasses.join(' ')}>This is really working!</p>
-            <button className={btnClass} onClick={props.togglePersonsHandler}>
-            Toggle Persons
-            </button>
-        </div>
-    );
+  const assignedClasses = [];
+  let btnClass = '';
+
+  if (props.showPersons) {
+      btnClass = classes.Red;
+  }
+
+  if (props.persons.length < 3) {
+    assignedClasses.push(classes.red);
+  }
+  if (props.persons.length < 2) {
+    assignedClasses.push(classes.bold);
+  }
+
+  return(
+      <div className={classes.Cockpit}>
+          <h1>Hi, I'm a React App</h1>
+          <p className={assignedClasses.join(' ')}>This is really working!</p>
+          <button ref={toggleBtnRef} className={btnClass} onClick={props.togglePersonsHandler}>
+          Toggle Persons
+          </button>
+            {<button onClick={authContext.login}>Log In</button>}
+      </div>
+  );
 }
 
 export default Cockpit;
