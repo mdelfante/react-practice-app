@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import classes from './App.css';
-import Person from './Person/Person';
+import Persons from '../components/Persons/Persons';
+import Cockpit from '../components/Cockpit/Cockpit';
+import withClass from '../hoc/withClass';
+import AuthContext from '../context/auth-context';
 
 const App = props => {
   const [personsState, setPersonsState] = useState({
@@ -10,8 +13,8 @@ const App = props => {
       { id: 2, name: 'Michael', age: 27 }
     ]
   });
-
   const [showPersonsState, setShowPersonsState] = useState(false);
+  const [authenticatedState, setAuthenticatedState] = useState(false);
 
   const nameChangedHandler = (event, id) => {
     const personIndex = personsState.persons.findIndex(p => {
@@ -43,44 +46,34 @@ const App = props => {
     setShowPersonsState(!doesShow);
   };
 
+  const loginHandler = () => {
+    setAuthenticatedState(true);
+  };
+
   let persons = null;
-  let btnClass = '';
 
   if (showPersonsState) {
-    persons = (
-      <div>
-        {personsState.persons.map((person, index) => {
-          return <Person 
-                  click={deletePersonHandler.bind(this, index)}
-                  name={person.name}
-                  age={person.age}
-                  key={person.id}
-                  changed={(event) => nameChangedHandler(event, person.id)} />
-        })}
-      </div>
-    );
-
-    btnClass = classes.Red;
-  }
-
-  const assignedClasses = [];
-  if (personsState.persons.length < 3) {
-    assignedClasses.push(classes.red);
-  }
-  if (personsState.persons.length < 2) {
-    assignedClasses.push(classes.bold);
+    persons = <Persons 
+        persons={personsState.persons}
+        clicked={deletePersonHandler}
+        changed={nameChangedHandler}
+        isAuthenticated={authenticatedState} />;
   }
 
   return (
-    <div className={classes.App}>
-      <h1>Hi, I'm a React App</h1>
-      <p className={assignedClasses.join(' ')}>This is really working!</p>
-      <button className={btnClass} onClick={togglePersonsHandler}>
-        Toggle Persons
-      </button>
-      {persons}
-    </div>
+    <React.Fragment>
+      <AuthContext.Provider value={{
+        authenticated: authenticatedState,
+        login: loginHandler
+      }}>
+        <Cockpit 
+          showPersons={showPersonsState}
+          persons={personsState.persons}
+          togglePersonsHandler={togglePersonsHandler} />
+        {persons}
+      </AuthContext.Provider>
+    </React.Fragment>
   );
 };
 
-export default App;
+export default withClass(App, classes.App);
